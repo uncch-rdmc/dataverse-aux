@@ -13,7 +13,6 @@ import com.jayway.jsonpath.spi.mapper.GsonMappingProvider;
 import com.jayway.jsonpath.spi.mapper.MappingProvider;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,6 +35,7 @@ public class JsonFilter {
             private final MappingProvider mappingProvider = new GsonMappingProvider();
             private final Set<Option> options = EnumSet.noneOf(Option.class);
 
+            @Override
             public JsonProvider jsonProvider() {
                 return jsonProvider;
             }
