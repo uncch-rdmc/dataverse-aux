@@ -5,8 +5,12 @@
  */
 package edu.unc.odum.dataverse.util.json;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.Json;
@@ -15,6 +19,7 @@ import javax.json.JsonPatchBuilder;
 import javax.json.JsonPointer;
 import javax.json.JsonReader;
 import javax.json.JsonValue;
+import javax.json.JsonWriter;
 import org.json.JSONException;
 import org.junit.Test;
 import org.junit.Rule;
@@ -40,14 +45,16 @@ public class JsonPointerForDatasetTest {
     public void testJsonPointer() throws IOException, JSONException {
         
         String rawJsonFileName = "/json/export_dataverse_json.cached";
-
+        String dumpFileName = "serialized.json";
         String filteredResultFile = "/json/filtered-result_2.json";
 
         // read the raw json file and expected result file
         try (InputStream rawIs = getClass().getResourceAsStream(rawJsonFileName);
             InputStream resultIs = getClass().getResourceAsStream(filteredResultFile);
                 JsonReader  jsonReader = Json.createReader(rawIs);
-                JsonReader jsonReaderActual = Json.createReader(resultIs)
+                JsonReader jsonReaderActual = Json.createReader(resultIs);
+                PrintWriter printWriter = new PrintWriter(new File(dumpFileName), "UTF-8");
+                JsonWriter jsonWriter = Json.createWriter(printWriter)
                 ) {
 
             JsonObject expected = jsonReaderActual.readObject();
@@ -77,7 +84,7 @@ public class JsonPointerForDatasetTest {
                     .apply(object);
             
             logger.log(Level.INFO, "actual={0}", actual);
-
+            jsonWriter.writeObject(actual);
             JSONAssert.assertEquals(expected.toString(), actual.toString(), false);
         }
         

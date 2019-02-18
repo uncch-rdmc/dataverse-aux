@@ -89,7 +89,107 @@ public class JsonFilter {
             logger.log(Level.SEVERE, "IOException was thrown while dumping the filtered json object", ex);
         }
 
+        
+        
     }
+    
+    
+    public Object selectMetadataPayload(InputStream inputStream) {
+        Configuration configuration = Configuration.defaultConfiguration();
+
+        DocumentContext dc = JsonPath.using(configuration).parse(inputStream);
+
+        Object dsObj = dc.read("$.datasetVersion['metadataBlocks', 'files']");
+        logger.log(Level.INFO, "dsObj={0}", dsObj);
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+        return dsObj;
+//        try (Writer writer = new FileWriter(destPath)) {
+//            gson.toJson(dsObj, writer);
+//        } catch (IOException ex) {
+//            logger.log(Level.SEVERE, "IOException was thrown while dumping the filtered json object", ex);
+//        }
+    }    
+    
+    
+    
+    public Object selectMetadataPayload(String jsonFileName) {
+        Object dsObjct = null;
+        try (InputStream inputStream = new FileInputStream(jsonFileName)) {
+            dsObjct =  selectMetadataPayload(inputStream);
+        } catch (IOException ex) {
+            logger.log(Level.SEVERE, "creating the inputstream throws the IOException", ex);
+        }
+        return dsObjct;
+    }
+
+    public Object selectMetadataPayload(File jsonFile) {
+        Object dsObjct = null;
+        try (InputStream inputStream = new FileInputStream(jsonFile)){
+            dsObjct=selectMetadataPayload(inputStream);
+        } catch (IOException ex) {
+            logger.log(Level.SEVERE, "creating the inputstream throws the IOException", ex);
+        }
+        return dsObjct;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    public void filterApiPayloadMetadataOnly(InputStream inputStream, String destPath) {
+        Configuration configuration = Configuration.defaultConfiguration();
+
+        DocumentContext dc = JsonPath.using(configuration).parse(inputStream);
+
+        Object dsObj = dc.read("$.datasetVersion['metadataBlocks', 'files']");
+        logger.log(Level.INFO, "dsObj={0}", dsObj);
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+
+        try (Writer writer = new FileWriter(destPath)) {
+            gson.toJson(dsObj, writer);
+        } catch (IOException ex) {
+            logger.log(Level.SEVERE, "IOException was thrown while dumping the filtered json object", ex);
+        }
+    }
+    
+    
+    
+    public void filterApiPayloadMetadataOnly(String jsonFileName, String destPath) {
+        try (InputStream inputStream = new FileInputStream(jsonFileName)) {
+            filterApiPayloadMetadataOnly(inputStream, destPath);
+        } catch (IOException ex) {
+            logger.log(Level.SEVERE, "creating the inputstream throws the IOException", ex);
+        }
+    }
+
+    public void filterApiPayloadMetadataOnly(File jsonFile, String destPath) {
+        try (InputStream inputStream = new FileInputStream(jsonFile)){
+            filterApiPayloadMetadataOnly(inputStream, destPath);
+        } catch (IOException ex) {
+            logger.log(Level.SEVERE, "creating the inputstream throws the IOException", ex);
+        }
+        
+    }
+    
+    
+    
+    public String parseDatasetCreationResponse(String responseString){
+        logger.log(Level.INFO, "responseString={0}", responseString);
+        
+        Configuration configuration = Configuration.defaultConfiguration();
+
+        DocumentContext dc = JsonPath.using(configuration).parse(responseString);
+        String path = "$.data.id";
+        Object dsObj = dc.read(path);
+        logger.log(Level.INFO, "dsObj={0}", dsObj);
+        
+        return dsObj.toString();
+    }
+    
     
 //    public static void main(String[] args) throws FileNotFoundException {
 //        JsonFilter demo = new JsonFilter();

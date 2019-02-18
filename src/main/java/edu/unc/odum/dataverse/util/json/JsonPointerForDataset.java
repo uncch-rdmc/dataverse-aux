@@ -22,5 +22,6 @@ public class JsonPointerForDataset {
     
     static String POINTER_FILES_FILTERED="/files";
     
+    static String POINTER_TO_DATASET_ID="/data/id";
     
 }

@@ -30,7 +30,7 @@ public class JsonFilterTest {
     public JsonFilterTest() {
     }
 
-    String datasetIdentifier = "6NBQ5E";
+    String datasetIdentifier = "WVKRII";
     String fileLocationRoot = "/tmp/files/10.5072/FK2/";
     String fileLocation = fileLocationRoot + datasetIdentifier + "/export_dataverse_json.cached";
     String pathString = fileLocationRoot + datasetIdentifier + "/filtered-result.json";
